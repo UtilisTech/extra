@@ -24,6 +24,7 @@
 package com.som_service.extra.utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -106,4 +107,29 @@ public class StringUtils {
 				
 		return string;
 	}
+	
+	/**
+	 * Checks whether the given character is a white space or an invisible character.<br/>
+	 * Specifically, if its corresponding int value is less then 33 or any from this list:<br/>
+	 * 127, 128, 129, 141, 142, 143, 144, 149, 157, 158, 160,<br>
+	 * it will return true.
+	 * @param c character to check for white space
+	 * @return true if c is a white space
+	 */
+	public static boolean isWhiteSpace(char c){
+		if (c <= 32){
+			return true;
+		}
+		
+		int character = (int)c;
+		
+		if (Arrays.binarySearch(SPACES, character) >= 0){
+			return true;
+		}
+		
+		return false;
+	}
+	private static int[] SPACES = new int[]{
+		127, 128, 129, 141, 142, 143, 144, 149, 157, 158, 160
+	};
 }
