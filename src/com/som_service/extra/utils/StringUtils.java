@@ -30,27 +30,37 @@ import java.util.Comparator;
 import java.util.HashMap;
 
 /**
- *
+ * StringUtils provides utility functions for processing strings and characters
  * @author Eugene Dementiev
  */
 public class StringUtils {
-	public static int string_overlaps(String needle, String haystack, int overlap_length){
+	
+	/**
+	 * Calculates the number of common ngrams in the haystack.<br/>
+	 * Needle may be longer than the haystack, but in that case the number of common ngrams will be limited by the haystack size.<br/>
+	 * The ngrams are not unique.
+	 * @param needle the needle string
+	 * @param haystack the haystack string
+	 * @param ngram_length length of ngrams
+	 * @return the number of common ngrams in the haystack
+	 */
+	public static int commonNGrams(String needle, String haystack, int ngram_length){
 		int overlaps = 0;
 		
-		if (needle.length() < overlap_length && needle.equalsIgnoreCase(haystack)){
+		if (needle.length() < ngram_length && needle.equalsIgnoreCase(haystack)){
 			return 1;
 		}
 		
 		if (needle.equalsIgnoreCase(haystack)){
-			return string_overlaps_max(needle.length(), haystack.length(), overlap_length);
+			return maxCommonNGrams(needle.length(), haystack.length(), ngram_length);
 		}
 		
-		if (needle.length() < overlap_length || haystack.length() < overlap_length){
-			overlap_length = Math.min(needle.length(), haystack.length());
+		if (needle.length() < ngram_length || haystack.length() < ngram_length){
+			ngram_length = Math.min(needle.length(), haystack.length());
 		}
 		
-		for (int i = 0; i < needle.length() - overlap_length + 1; i++){
-			if (haystack.contains(needle.substring(i, i+overlap_length))){
+		for (int i = 0; i < needle.length() - ngram_length + 1; i++){
+			if (haystack.contains(needle.substring(i, i+ngram_length))){
 				overlaps++;
 			}
 		}
@@ -58,13 +68,28 @@ public class StringUtils {
 		return overlaps;
 	}
 	
-	public static int string_overlaps_max(int needle_length, int haystack_length, int overlap_length){
+	/**
+	 * Calculates maximum possible number of common ngrams given length of haystack and needle.<br/>
+	 * Needle may be longer than the haystack, but in that case the max number of common ngrams will be limited by the haystack size.<br/>
+	 * The ngrams are not unique.
+	 * @param needle_length length of the needle string
+	 * @param haystack_length length of the haystack string
+	 * @param ngram_length length of the ngram
+	 * @return maximum number of common ngrams between given strings
+	 */
+	public static int maxCommonNGrams(int needle_length, int haystack_length, int ngram_length){
 		if (haystack_length >= needle_length){
-			return needle_length + 1 - overlap_length;
+			return needle_length + 1 - ngram_length;
 		}
-		return haystack_length + 1 - overlap_length;
+		return haystack_length + 1 - ngram_length;
 	}
 	
+	/**
+	 * Splits the given string into ngrams of given length
+	 * @param string string to split
+	 * @param n ngram length
+	 * @return  array of ngrams
+	 */
 	public static String[] nGrams(String string, int n){
 		String[] ngrams = new String[string.length()+1-n];
 		for (int i = 0; i < ngrams.length; i++){
@@ -73,6 +98,18 @@ public class StringUtils {
 		return ngrams;
 	}
 	
+	/**
+	 * Stringifies a map, sorting it by keys in given order.<br/>
+	 * Key and value are joined by kv_separator.<br/>
+	 * Pairs are joined by pair_separator
+	 * @param <K> Key type
+	 * @param <V> Value type
+	 * @param map map to stringify
+	 * @param ascending whether ascending order should be applied to keys
+	 * @param kv_separator separator to join key and value
+	 * @param pair_separator separator to join pairs (rows)
+	 * @return string representation of the map given the arguments
+	 */
 	public static <K extends Comparable<? super K>, V> String toStringSorted(final HashMap<K, V> map, boolean ascending, String kv_separator, String pair_separator){
 		
 		Comparator<K> comparator = new Comparator<K>() {
@@ -107,7 +144,7 @@ public class StringUtils {
 				
 		return string;
 	}
-	
+
 	/**
 	 * Checks whether the given character is a white space or an invisible character.<br/>
 	 * Specifically, if its corresponding int value is less then 33 or any from this list:<br/>
