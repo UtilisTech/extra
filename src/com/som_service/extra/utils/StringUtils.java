@@ -148,12 +148,14 @@ public class StringUtils {
 	/**
 	 * Checks whether the given character is a white space or an invisible character.<br/>
 	 * Specifically, if its corresponding int value is less then 33 or any from this list:<br/>
-	 * 127, 128, 129, 141, 142, 143, 144, 149, 157, 158, 160,<br>
-	 * it will return true.
+	 * 127, 128, 129, 141, 142, 143, 144, 149, 157, 158, 160,<br/>
+	 * it will return true.<br/>
+	 * Will also return true if matches [\\p{Z}\\s\\p{javaSpaceChar}\\p{Zs}]
 	 * @param c character to check for white space
 	 * @return true if c is a white space
 	 */
 	public static boolean isWhiteSpace(char c){
+		
 		if (c <= 32){
 			return true;
 		}
@@ -161,6 +163,11 @@ public class StringUtils {
 		int character = (int)c;
 		
 		if (Arrays.binarySearch(SPACES, character) >= 0){
+			return true;
+		}
+		
+		String s = c+"";
+		if (s.matches("[\\p{Z}\\s\\p{javaSpaceChar}\\p{Zs}]")){
 			return true;
 		}
 		
