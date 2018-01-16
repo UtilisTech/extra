@@ -3,7 +3,7 @@
 
 	<groupId>com.som_service</groupId>
 	<artifactId>extra</artifactId>
-	<version>1.0</version>
+	<version>0.1</version>
 	
 	<dependencies>
 		
