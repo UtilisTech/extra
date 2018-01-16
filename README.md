@@ -1,4 +1,4 @@
-# com.som_service.extra
+# SOM Extra
 ## About
 A collection of utility and helper classes and methods.
 
