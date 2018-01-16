@@ -47,7 +47,6 @@
 						<configuration>
 							<outputDirectory>${project.build.directory}/lib</outputDirectory>
 							<includeScope>runtime</includeScope>
-							<includeScope>compile</includeScope>
 						</configuration>
 					</execution>
 				</executions>
