@@ -212,6 +212,41 @@ public class RuntimeUtilsTest {
 		assertTrue(!valuedMap.get("--fruit").contains("red"));
 		assertTrue(!valuedMap.get("--fruit").contains("yellow"));
 	}
+	
+	@Test
+	public void commonTest6(){
+		args = new String[]{
+			"-v",
+			"foo.zip",
+			"foo"
+			
+		};
+		hashMap = RuntimeUtils.parseArguments(args);
+		
+		assertEquals(hashMap.size(), 2);
+		
+		assertTrue(hashMap.containsKey(""));
+		assertTrue(hashMap.containsKey("-v"));
+		
+		assertEquals(hashMap.get(""), "foo");
+		assertEquals(hashMap.get("-v"), "");
+		
+		valuedMap = RuntimeUtils.parseArgumentsRepeating(args);
+		assertEquals(valuedMap.size(), 3);
+		assertEquals(valuedMap.keySet().size(), 2);
+		
+		assertTrue(valuedMap.containsKey(""));
+		assertTrue(valuedMap.containsKey("-v"));
+		
+		assertTrue(valuedMap.get("-v").get(0).isEmpty());
+		assertEquals(valuedMap.get("").size(), 2);
+		
+		assertTrue(valuedMap.get("").contains("foo.zip"));
+		assertTrue(valuedMap.get("").contains("foo"));
+		assertEquals(valuedMap.get("").indexOf("foo.zip"), 0);
+		assertEquals(valuedMap.get("").indexOf("foo"), 1);
+		
+	}
 
 	/**
 	 * Basic test of the private methods in RuntimeUtils. Should not be normally run once other tests are in place
