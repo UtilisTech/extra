@@ -41,6 +41,9 @@ public class RuntimeUtils {
 	 * • single character argument can be concatenated and the whole group can then be preceded by a single dash
 	 * • double dash arguments are checked are allowed to have latin alphanumerics, dash and underscore
 	 * • values for doble dash argument keys can be anything, as long as they are parsed as a single entry in the arguments array
+	 * • arguments that do not begin with a dash and are not preceded by a double dash argument will be treated as if they had an empty string key
+	 * 
+	 * Note that this method is unsuitable for multiple non-dashed arguments, e.g. [-v, input.file, output.file]
 	 * Note that repeating arguments will overwrite preceding arguments with the same key
 	 * For example:
  	 * Arguments like '-qwe' are expanded into -q, -w and -e, and added as keys with an empty String value
@@ -65,6 +68,8 @@ public class RuntimeUtils {
 	 * • single character argument can be concatenated and the whole group can then be preceded by a single dash
 	 * • double dash arguments are checked are allowed to have latin alphanumerics, dash and underscore
 	 * • values for doble dash argument keys can be anything, as long as they are parsed as a single entry in the arguments array
+	 * • arguments that do not begin with a dash and are not preceded by a double dash argument will be treated as if they had an empty string key
+	 * 
 	 * Note that each argument key corresponds to a list of values for that key
 	 * For example (using pseudo-JSON format):
 	 * Arguments: [--fruit, apple, --fruit, banana, --color, red, --color, yellow] will be parsed as:
@@ -116,7 +121,7 @@ public class RuntimeUtils {
 				arg_next = args[i+1];
 			}
 			
-			if (arg.matches("-{3,}.*")){
+			if (arg.matches("^\\-{3,}.*")){
 				throw new IllegalArgumentException("Invalid argument: " + arg);
 			}
 			else if (arg.startsWith("--")){
@@ -177,7 +182,13 @@ public class RuntimeUtils {
 				i++;
 			}
 			else {
-				throw new IllegalArgumentException("Invalid argument: " + arg);
+				if (collection instanceof HashMap){
+					((HashMap)collection).put("", arg);
+				}
+				else {
+					((ArrayListValuedHashMap)collection).put("", arg);
+				}
+				i++;
 			}
 
 		}
